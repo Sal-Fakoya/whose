@@ -84,7 +84,9 @@ particular item, and posting a photo publicly lets anyone claim something that i
    of the file. `.streamlit/secrets.toml` and `.env` are gitignored and must never be
    committed.
 
-4. Run the app:
+4. To confirm your Gemini key works, run `python scripts/check_gemini.py`.
+
+5. Run the app:
 
    ```bash
    streamlit run app.py
