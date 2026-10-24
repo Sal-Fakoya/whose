@@ -19,8 +19,9 @@ _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 # Optional committed demo images live here. Missing files are fine; items render without.
 _SEED_IMAGE_DIR = os.path.join(_DATA_DIR, "seed_images")
 
-# Generated seed data from scripts/build_seed.py. When present and usable, it is preferred
-# over the hardcoded fallback below. Either way, seeding never calls the AI.
+# Seed data from data/seed_items.json (curated items with user-provided photos). When present
+# and usable, it is preferred over the hardcoded fallback below. Either way, seeding never
+# calls the AI.
 _SEED_JSON = os.path.join(_DATA_DIR, "seed_items.json")
 
 # Demo claimants attached to pending / retrieved items so the desk and handoff views have
