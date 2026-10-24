@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run tests after spec task",
+      "trigger": "PostTaskExec",
+      "description": "After a spec task completes, run pytest (stop on first failure).",
+      "action": {
+        "type": "command",
+        "command": "python -m pytest tests -q -x"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run tests on Python save",
+      "trigger": "PostFileSave",
+      "description": "When a Python file in whose/ or tests/ is saved, run pytest (stop on first failure).",
+      "matcher": "(whose|tests)[\\\\/].*\\.py$",
+      "action": {
+        "type": "command",
+        "command": "python -m pytest tests -q -x"
+      }
+    }
+  ]
+}

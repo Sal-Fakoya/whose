@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Project rules check",
+      "trigger": "PostFileSave",
+      "description": "After saving app.py or a file under whose/, check for emojis in user-facing text, hardcoded secrets, and AI calls outside form submit handlers.",
+      "matcher": "^(app\\.py|.*whose[\\\\/].*\\.py)$",
+      "action": {
+        "type": "agent",
+        "prompt": "Check the file that was just saved for three things: any emoji in user-facing text, any hardcoded API key or passcode (reads from st.secrets or environment variables are fine), and any call to functions in whose/ai.py made outside a form submit handler. If you find a problem, report it in one or two sentences with the line and the fix. If the file is clean, say nothing."
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# Whose? runtime dependencies. Pin to known-good, compatible releases.
+# sqlite3, secrets, uuid, and json are in the Python 3.11 standard library.
+
+streamlit==1.50.0
+
+# Official Google Gen AI SDK (Gemini). Upstream advises pinning below 3.0.
+google-genai==2.22.0
+
+# Image handling for uploads and validation.
+pillow==11.3.0

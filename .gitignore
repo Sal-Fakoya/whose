@@ -1,0 +1,26 @@
+# Secrets — never commit
+.streamlit/secrets.toml
+.env
+
+# Local SQLite database (seeded on startup)
+data/whose.db
+data/whose.db-journal
+data/whose.db-wal
+data/whose.db-shm
+
+# Uploaded images (local, ephemeral). Keep the folder, ignore its contents.
+data/images/*
+!data/images/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db

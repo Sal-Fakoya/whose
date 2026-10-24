@@ -1,0 +1,16 @@
+# Streamlit configuration for Whose?
+# Secrets (GEMINI_API_KEY, DESK_PASSCODE) go in .streamlit/secrets.toml, which is gitignored.
+
+[theme]
+primaryColor = "#e87500"          # UT Dallas orange (primary buttons, accents)
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f3f4f6"
+textColor = "#1a1a1a"
+font = "sans serif"
+
+[server]
+# Uploaded photos are small; keep the cap modest.
+maxUploadSize = 10
+
+[browser]
+gatherUsageStats = false
