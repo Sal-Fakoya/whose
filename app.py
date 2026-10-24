@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import streamlit as st
 
-from whose import db, seed
+from whose import ai, db, seed
 from whose.config import RESULT_COUNTS
 from whose.views import desk, found, found_confirm, handoff, home, item, lost
 
@@ -76,6 +76,23 @@ def main() -> None:
     )
     _startup()
     _init_state()
+
+    # Operator warning if the Gemini key is missing or malformed. This is a local shape
+    # check only (no network call); it helps catch a misconfigured deployment before a demo.
+    key_status = ai.api_key_status()
+    if key_status == "missing":
+        st.warning(
+            "AI is not configured: set GEMINI_API_KEY in the app's secrets. "
+            "Verification will not work until it is set.",
+            icon=":material/warning:",
+        )
+    elif key_status == "suspect":
+        st.warning(
+            "The configured GEMINI_API_KEY does not look like a Gemini API key "
+            "(these start with AIza). Verification may fail. Create one at "
+            "https://aistudio.google.com/apikey and set it in the app's secrets.",
+            icon=":material/warning:",
+        )
 
     view = st.session_state.get("view", "home")
     render = _ROUTES.get(view, home.render)

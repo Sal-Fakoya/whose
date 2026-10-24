@@ -13,8 +13,10 @@ import os
 import re
 from dataclasses import dataclass, field
 
-# Gemini Flash model. "latest" tracks the current Flash release.
-MODEL_NAME = "gemini-flash-latest"
+# Gemini Flash model. A pinned, generally-available version is usually less contended than
+# the "-latest" alias, which helps avoid 503/504 overload during a demo. Verified responsive
+# for this project; fall back to gemini-3.5-flash or gemini-flash-latest if it is unavailable.
+MODEL_NAME = "gemini-3.6-flash"
 
 # Delimiters that fence the untrusted claimant answer inside the judge prompt.
 _ANSWER_OPEN = "<<<ANSWER>>>"
@@ -58,6 +60,25 @@ def _api_key() -> str:
     if not key:
         raise AIConfigError("GEMINI_API_KEY is not configured.")
     return key
+
+
+def api_key_status() -> str:
+    """Report the configured key's shape without making a network call.
+
+    Returns one of: "ok" (looks like a Gemini key), "missing" (not set), or
+    "suspect" (set but does not look like an AIza... Gemini API key). Used only to warn
+    the operator; it never blocks or logs the key value.
+    """
+    try:
+        key = _api_key()
+    except AIConfigError:
+        return "missing"
+    key = key.strip()
+    # Valid Gemini Developer API keys: the legacy "AIza" format and the current "AQ."
+    # Authentication Key format (Google began issuing AQ. keys from AI Studio in 2026).
+    if (key.startswith("AIza") or key.startswith("AQ.")) and len(key) >= 20:
+        return "ok"
+    return "suspect"
 
 
 def _is_config_error(exc: Exception) -> bool:
