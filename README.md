@@ -2,6 +2,8 @@
 
 A peer-to-peer lost-and-found app for UT Dallas students.
 
+Live app: https://whose-lost-and-found.streamlit.app/
+
 ## Project overview
 
 ### The problem
