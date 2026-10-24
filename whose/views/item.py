@@ -173,9 +173,7 @@ def render() -> None:
         _goto("item", selected_item_id=item_id)
         return
 
-    if result.outcome == verify.RATE_LIMITED:
-        st.warning(result.message)
-    elif result.outcome == verify.AI_ERROR:
+    if result.outcome in (verify.RATE_LIMITED, verify.AI_ERROR, verify.AI_CONFIG_ERROR):
         st.warning(result.message)
     elif result.outcome in (verify.LOCKED, verify.NOT_CLAIMABLE):
         st.error(result.message)

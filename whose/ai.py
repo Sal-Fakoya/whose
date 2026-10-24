@@ -29,6 +29,10 @@ class AIRateLimitError(AIError):
     """The AI provider returned HTTP 429 / RESOURCE_EXHAUSTED. Ask the user to retry."""
 
 
+class AIConfigError(AIError):
+    """The AI credential is missing or rejected (not configured, 401, 403, invalid key)."""
+
+
 @dataclass
 class ItemAI:
     """Structured result of describing a found item's photo."""
@@ -52,8 +56,26 @@ def _api_key() -> str:
         pass
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
-        raise AIError("GEMINI_API_KEY is not configured.")
+        raise AIConfigError("GEMINI_API_KEY is not configured.")
     return key
+
+
+def _is_config_error(exc: Exception) -> bool:
+    """Detect credential/auth failures (401/403, invalid or unauthorized key)."""
+    code = getattr(exc, "code", None)
+    if code in (401, 403):
+        return True
+    text = f"{getattr(exc, 'status', '')} {exc}".upper()
+    markers = (
+        "401",
+        "403",
+        "UNAUTHENTICATED",
+        "PERMISSION_DENIED",
+        "API KEY NOT VALID",
+        "API_KEY_INVALID",
+        "INVALID API KEY",
+    )
+    return any(m in text for m in markers)
 
 
 # Cap each request so a slow or stuck server surfaces as a friendly error instead of
@@ -124,6 +146,8 @@ def _generate(contents) -> str:
     except AIError:
         raise
     except Exception as exc:  # SDK/network errors
+        if _is_config_error(exc):
+            raise AIConfigError(str(exc)) from exc
         if _is_rate_limit(exc):
             raise AIRateLimitError(str(exc)) from exc
         raise AIError(str(exc)) from exc

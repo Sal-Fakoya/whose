@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Sequence
 
 from . import config, db
-from .ai import AIError, AIRateLimitError
+from .ai import AIConfigError, AIError, AIRateLimitError
 
 # A judge takes (hidden_detail, answer) and returns True on a semantic match.
 JudgeFn = Callable[[str, str], bool]
@@ -23,6 +23,7 @@ LOCKED = "LOCKED"
 INVALID_EMAIL = "INVALID_EMAIL"
 MISSING_FIELDS = "MISSING_FIELDS"
 AI_ERROR = "AI_ERROR"
+AI_CONFIG_ERROR = "AI_CONFIG_ERROR"
 RATE_LIMITED = "RATE_LIMITED"
 NOT_CLAIMABLE = "NOT_CLAIMABLE"
 
@@ -157,6 +158,12 @@ def attempt(
         return VerifyResult(
             RATE_LIMITED,
             message="We're a bit busy right now. Please try again in a minute.",
+        )
+    except AIConfigError:
+        return VerifyResult(
+            AI_CONFIG_ERROR,
+            message="Verification is temporarily unavailable because the AI service is "
+            "not configured. Please contact the Lost & Found desk, or try again later.",
         )
     except AIError:
         return VerifyResult(
